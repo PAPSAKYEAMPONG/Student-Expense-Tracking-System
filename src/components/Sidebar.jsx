@@ -1,8 +1,21 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Home, Wallet, PieChart, Target, User, Settings, X } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Home, Wallet, PieChart, Target, User, Settings, X, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 function Sidebar({ isOpen, onClose }) {
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch(err) {
+      console.error("Failed to log out");
+    }
+  };
+
   const handleLinkClick = () => {
     if (window.innerWidth <= 768 && onClose) {
       onClose();
@@ -42,15 +55,15 @@ function Sidebar({ isOpen, onClose }) {
         </nav>
 
         <div className="sidebar-user">
-          <div className="user-avatar" style={{marginRight: '12px'}}>
-             JD
+          <div className="user-avatar" style={{marginRight: '12px', fontSize: '14px', flexShrink: 0}}>
+             {currentUser?.displayName ? currentUser.displayName.charAt(0).toUpperCase() : (currentUser?.email ? currentUser.email.charAt(0).toUpperCase() : 'U')}
           </div>
-          <div className="user-info">
-            <span className="user-name">John Doe</span>
-            <span className="user-role">Student</span>
+          <div className="user-info" style={{minWidth: 0, overflow: 'hidden'}}>
+            <span className="user-name" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block'}}>{currentUser?.displayName || 'Student User'}</span>
+            <span className="user-role" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block'}}>{currentUser?.email || ''}</span>
           </div>
-          <button className="settings-btn" aria-label="Settings">
-            <Settings size={18} />
+          <button className="settings-btn" aria-label="Logout" onClick={handleLogout} style={{marginLeft: 'auto', flexShrink: 0}}>
+            <LogOut size={18} />
           </button>
         </div>
       </aside>

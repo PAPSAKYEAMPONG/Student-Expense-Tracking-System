@@ -8,6 +8,7 @@ import Wallets from './pages/Wallets';
 import Analytics from './pages/Analytics';
 import Budget from './pages/Budget';
 import { ExpenseProvider } from './context/ExpenseContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import './index.css';
 
 const Placeholder = ({ title }) => (
@@ -17,29 +18,49 @@ const Placeholder = ({ title }) => (
   </div>
 );
 
+// Protected Route Enforcer
+const ProtectedRoute = ({ children }) => {
+  const { currentUser } = useAuth();
+  if (!currentUser) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+// Public Route Enforcer (forces away from login if already logged in)
+const PublicRoute = ({ children }) => {
+  const { currentUser } = useAuth();
+  if (currentUser) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+};
+
 function App() {
   return (
-    <ExpenseProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Welcome />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
+    <AuthProvider>
+      <ExpenseProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<PublicRoute><Welcome /></PublicRoute>} />
+            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
 
-          {/* Dashboard Routes */}
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Home />} />
-            <Route path="wallets" element={<Wallets />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="budget" element={<Budget />} />
-            <Route path="profile" element={<Placeholder title="Profile" />} />
-          </Route>
-          
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </ExpenseProvider>
+            {/* Dashboard Routes (Protected) */}
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+              <Route index element={<Home />} />
+              <Route path="wallets" element={<Wallets />} />
+              <Route path="analytics" element={<Analytics />} />
+              <Route path="budget" element={<Budget />} />
+              <Route path="profile" element={<Placeholder title="Profile" />} />
+            </Route>
+            
+            {/* Catch-all redirect */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </ExpenseProvider>
+    </AuthProvider>
   );
 }
 
