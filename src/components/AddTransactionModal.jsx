@@ -51,16 +51,12 @@ function AddTransactionModal({ isOpen, onClose }) {
 
           <div className="input-container">
             <label className="input-label">Wallet / Account</label>
-            <select 
-              className="input-field" 
-              value={formData.walletId} 
-              onChange={e => setFormData({...formData, walletId: e.target.value})}
-            >
-              <option value="">Select a wallet...</option>
-              {state.wallets.map(w => (
-                <option key={w.id} value={w.id}>{w.name} (${w.balance.toFixed(2)})</option>
-              ))}
-            </select>
+            <select className="input-field" value={formData.walletId} onChange={e => setFormData({...formData, walletId: e.target.value})} required>
+                <option value="">Select an account</option>
+                {state.wallets.map(w => (
+                  <option key={w.id} value={w.id}>{w.name} (GH¢{w.balance.toFixed(2)})</option>
+                ))}
+              </select>
           </div>
 
           <Input 
@@ -74,7 +70,7 @@ function AddTransactionModal({ isOpen, onClose }) {
           
           <Input 
             id="amount" 
-            label="Amount ($)" 
+            label="Amount (GH¢)" 
             type="number" 
             step="0.01"
             placeholder="0.00"

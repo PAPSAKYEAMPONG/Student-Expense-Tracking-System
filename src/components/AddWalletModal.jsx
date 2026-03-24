@@ -57,7 +57,7 @@ function AddWalletModal({ isOpen, onClose }) {
 
           <Input 
             id="balance" 
-            label="Initial Balance ($)" 
+            label="Initial Balance (GH¢)" 
             type="number" 
             step="0.01"
             placeholder="0.00"

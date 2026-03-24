@@ -40,7 +40,7 @@ function Analytics() {
       <div className="wallets-cards-grid" style={{ gridTemplateColumns: 'minmax(0, 400px)' }}>
         <div className="wallet-card dark" style={{justifyContent: 'center', padding: '32px'}}>
           <span style={{fontSize: '11px', fontWeight: 600, opacity: 0.8, letterSpacing: '0.5px', marginBottom: '8px'}}>TOTAL BALANCE</span>
-          <h2 className="wallet-card-balance" style={{marginBottom: '16px'}}>${totalBalance.toFixed(2)}</h2>
+          <h2 className="wallet-card-balance" style={{marginBottom: '16px'}}>GH¢{totalBalance.toFixed(2)}</h2>
           <div>
             <span style={{backgroundColor: 'rgba(25, 182, 155, 0.4)', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: '11px', fontWeight: 600}}>
               Tracking Active
@@ -94,7 +94,7 @@ function Analytics() {
                         icon={<span style={{fontSize: '18px', display: 'flex', alignContent: 'center'}}>{icon}</span>} 
                         iconBg={iconBg} 
                         label={item.label} 
-                        amount={`$${item.amount.toFixed(2)}`} 
+                        amount={`GH¢${item.amount.toFixed(2)}`} 
                         percent={item.percent} 
                         color={color} 
                       />

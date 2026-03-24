@@ -56,7 +56,7 @@ function Wallets() {
                 <span>{w.name}</span>
                 {getIconForType(w.type)}
               </div>
-              <h2 className="wallet-card-balance">${w.balance.toFixed(2)}</h2>
+              <h2 className="wallet-card-balance">GH¢{w.balance.toFixed(2)}</h2>
               <div className="wallet-card-footer">
                 <span style={w.type === 'cash' ? { color: 'var(--text-muted)' } : {}}>Active Balance</span>
                 <ArrowRight size={16} color={w.type === 'cash' ? 'var(--text-main)' : undefined} />
@@ -91,7 +91,7 @@ function Wallets() {
                       iconBg={t.type === 'income' ? '#dff2ec' : '#fdeaca'}
                       title={t.title}
                       subtitle={`${wallet ? wallet.name : 'Unknown Account'} • ${new Date(t.date).toLocaleDateString()}`}
-                      amount={`${t.type === 'income' ? '+' : '-'}$${parseFloat(t.amount).toFixed(2)}`}
+                      amount={`${t.type === 'income' ? '+' : '-'}GH¢${parseFloat(t.amount).toFixed(2)}`}
                       badge={t.category}
                       type={t.type}
                     />

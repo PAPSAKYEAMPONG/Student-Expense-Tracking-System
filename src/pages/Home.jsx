@@ -55,16 +55,16 @@ function Home() {
           {/* Main Balance Card */}
           <div className="balance-card">
             <p className="card-label">Total Available Balance</p>
-            <h2 className="card-balance">${totalBalance.toFixed(2)}</h2>
+            <h2 className="card-balance">GH¢{totalBalance.toFixed(2)}</h2>
             
             <div className="balance-stats">
               <div>
                 <p className="stat-label">MONTHLY INCOME</p>
-                <p className="stat-value">${totalIncome.toFixed(2)}</p>
+                <p className="stat-value">GH¢{totalIncome.toFixed(2)}</p>
               </div>
               <div>
                 <p className="stat-label">TOTAL EXPENSES</p>
-                <p className="stat-value">${totalExpenses.toFixed(2)}</p>
+                <p className="stat-value">GH¢{totalExpenses.toFixed(2)}</p>
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@ function Home() {
                   iconBg={t.type === 'income' ? '#dff2ec' : '#fdeaca'}
                   title={t.title} 
                   subtitle={`${t.category} • ${new Date(t.date).toLocaleDateString()}`} 
-                  amount={`${t.type === 'income' ? '+' : '-'}$${parseFloat(t.amount).toFixed(2)}`} 
+                  amount={`${t.type === 'income' ? '+' : '-'}GH¢${parseFloat(t.amount).toFixed(2)}`} 
                   type={t.type} 
                 />
               ))
@@ -138,7 +138,7 @@ function Home() {
           <div className="tip-card" style={{marginTop: '24px'}}>
             <div className="tip-icon"><Lightbulb size={20} color="#159a83"/></div>
             <h4>Student Tip</h4>
-            <p>You've spent 15% more on coffee this week than your semester average. Switching to the library cafe could save you <strong>$45</strong> by finals.</p>
+            <p>You've spent 15% more on coffee this week than your semester average. Switching to the library cafe could save you <strong>GH¢45</strong> by finals.</p>
             <button className="btn-link">Explore Student Discounts →</button>
           </div>
 
@@ -168,7 +168,7 @@ const BudgetBar = ({ label, spent, total, color }) => {
     <div className="budget-bar-container">
       <div className="budget-bar-header">
         <span className="budget-label">{label}</span>
-        <span className="budget-values">${spent} / ${total}</span>
+        <span className="budget-values">GH¢{spent} / GH¢{total}</span>
       </div>
       <div className="progress-track">
         <div className="progress-fill" style={{ width: `${percent}%`, backgroundColor: color }}></div>

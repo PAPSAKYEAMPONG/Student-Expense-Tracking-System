@@ -54,11 +54,11 @@ function Budget() {
           <div className="wallets-cards-grid" style={{gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '20px', marginBottom: '32px'}}>
             <div className="wallet-card dark" style={{minHeight: '140px', padding: '24px', justifyContent: 'center'}}>
               <h4 style={{fontSize: '12px', fontWeight: 600, opacity: 0.8, marginBottom: '8px'}}>TOTAL BUDGETED</h4>
-              <h2 className="wallet-card-balance" style={{fontSize: '32px'}}>${totalBudgeted.toFixed(2)}</h2>
+              <h2 className="wallet-card-balance" style={{fontSize: '32px'}}>GH¢{totalBudgeted.toFixed(2)}</h2>
             </div>
             <div className="wallet-card light" style={{minHeight: '140px', padding: '24px', borderColor: 'var(--border-color)', justifyContent: 'center'}}>
               <h4 style={{fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '8px'}}>TOTAL SPENT</h4>
-              <h2 className="wallet-card-balance" style={{fontSize: '32px', color: 'var(--text-main)'}}>${totalSpent.toFixed(2)}</h2>
+              <h2 className="wallet-card-balance" style={{fontSize: '32px', color: 'var(--text-main)'}}>GH¢{totalSpent.toFixed(2)}</h2>
               <div style={{display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px'}}>
                  <div style={{width: '8px', height: '8px', borderRadius: '50%', backgroundColor: overallUsedPercent > 80 ? '#e11d48' : '#19b69b'}}></div>
                  <p style={{fontSize: '12px', color: overallUsedPercent > 80 ? '#e11d48' : '#19b69b', fontWeight: 600}}>{overallUsedPercent.toFixed(1)}% Used</p>
@@ -100,8 +100,8 @@ function Budget() {
                         </div>
                       </div>
                       <div style={{textAlign: 'right'}}>
-                        <h4 style={{fontSize: '16px', fontWeight: 700}}>${spent.toFixed(2)}</h4>
-                        <p style={{fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px'}}>of ${b.limit.toFixed(2)}</p>
+                        <h4 style={{fontSize: '16px', fontWeight: 700}}>GH¢{spent.toFixed(2)}</h4>
+                        <p style={{fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px'}}>of GH¢{b.limit.toFixed(2)}</p>
                       </div>
                     </div>
                     <div className="progress-track" style={{height: '8px', backgroundColor: '#f0f0f0'}}>
@@ -110,10 +110,10 @@ function Budget() {
                     {isOver ? (
                       <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px'}}>
                         <AlertCircle size={14} color="#e11d48"/>
-                        <p style={{fontSize: '12px', color: '#e11d48', fontWeight: 600}}>Nearing limit (${remaining.toFixed(2)} remaining)</p>
+                        <p style={{fontSize: '12px', color: '#e11d48', fontWeight: 600}}>Nearing limit (GH¢{remaining.toFixed(2)} remaining)</p>
                       </div>
                     ) : (
-                      <p style={{fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px', fontWeight: 500}}>${remaining.toFixed(2)} remaining</p>
+                      <p style={{fontSize: '12px', color: 'var(--text-muted)', marginTop: '12px', fontWeight: 500}}>GH¢{remaining.toFixed(2)} remaining</p>
                     )}
                   </div>
                 );
@@ -153,7 +153,7 @@ function Budget() {
 
               <Input 
                 id="limit" 
-                label="Monthly Limit ($)" 
+                label="Monthly Limit (GH¢)" 
                 type="number" 
                 step="0.01"
                 placeholder="e.g. 150.00" 
