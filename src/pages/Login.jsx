@@ -31,7 +31,7 @@ function Login() {
     <div className="auth-layout-container">
       <div className="auth-form-wrapper">
         <div className="auth-form-card">
-          <button className="back-button" onClick={() => navigate(-1)} aria-label="Go back">
+          <button className="back-button" onClick={() => navigate('/')} aria-label="Return to Welcome">
             <ArrowLeft size={28} strokeWidth={2.5} />
           </button>
 
@@ -55,6 +55,10 @@ function Login() {
                 <Button variant="primary" type="submit" disabled={loading}>
                   {loading ? 'Signing In...' : 'Sign In'}
                 </Button>
+              </div>
+              
+              <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '14px', color: 'var(--text-muted)' }}>
+                Don't have an account? <span onClick={() => navigate('/signup')} style={{ color: 'var(--primary)', fontWeight: '600', cursor: 'pointer' }}>Sign Up</span>
               </div>
             </form>
           </div>
