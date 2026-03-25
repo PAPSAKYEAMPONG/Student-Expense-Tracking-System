@@ -23,6 +23,44 @@ function Analytics() {
     percent: totalExpense > 0 ? (categoryTotals[cat] / totalExpense) * 100 : 0
   })).sort((a, b) => b.amount - a.amount);
 
+  const today = new Date();
+  
+  // Weekly Trends Data
+  const last7Days = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() - (6 - i));
+    return d;
+  });
+
+  const weeklyData = last7Days.map(date => {
+    const dateStr = date.toDateString();
+    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+    const amount = expenses
+      .filter(t => new Date(t.date).toDateString() === dateStr)
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    return { dayName, amount };
+  });
+  const maxWeeklyExpense = Math.max(...weeklyData.map(d => d.amount), 100);
+
+  // Monthly Trends Data
+  const last5Months = Array.from({ length: 5 }).map((_, i) => {
+    const d = new Date(today.getFullYear(), today.getMonth() - (4 - i), 1);
+    return d;
+  });
+
+  const monthlyData = last5Months.map(date => {
+    const monthYear = `${date.getMonth()}-${date.getFullYear()}`;
+    const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+    const amount = expenses
+      .filter(t => {
+        const tDate = new Date(t.date);
+        return `${tDate.getMonth()}-${tDate.getFullYear()}` === monthYear;
+      })
+      .reduce((sum, t) => sum + parseFloat(t.amount), 0);
+    return { monthName, amount };
+  });
+  const maxMonthlyExpense = Math.max(...monthlyData.map(d => d.amount), 500);
+
   return (
     <div className="page-wrapper">
       <header className="dashboard-header">
@@ -61,14 +99,19 @@ function Analytics() {
               </div>
             </div>
             
-            <div style={{flex: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-around', borderBottom: '1px solid #f0f0f0', paddingBottom: '16px', position: 'relative'}}>
-               {/* Decorative bars placeholder tied indirectly to spending amount */}
-               {Array.from({length: 5}).map((_, i) => (
-                  <div key={i} style={{width: '24px', height: `${Math.random() * 60 + 20}%`, backgroundColor: i === 4 ? 'var(--card-dark)' : '#e0e0e0', borderRadius: '4px'}}></div>
-               ))}
+            <div style={{flex: 1, height: '220px', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-around', borderBottom: '1px solid #f0f0f0', paddingBottom: '16px', paddingTop: '16px'}}>
+               {monthlyData.map((data, i) => {
+                 const heightPercent = data.amount > 0 ? (data.amount / maxMonthlyExpense) * 100 : 0;
+                 const finalHeight = data.amount === 0 ? 4 : heightPercent;
+                 return (
+                   <div key={i} style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', width: '24px'}}>
+                     <div style={{width: '100%', height: `${finalHeight}%`, minHeight: '4px', backgroundColor: i === 4 ? 'var(--card-dark)' : '#e0e0e0', borderRadius: '4px', transition: 'height 0.3s ease'}} title={`GH¢${data.amount.toFixed(2)}`}></div>
+                   </div>
+                 )
+               })}
             </div>
             <div style={{display: 'flex', justifyContent: 'space-around', marginTop: '16px', fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)'}}>
-              <span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span>
+              {monthlyData.map((d, i) => <span key={i}>{d.monthName}</span>)}
             </div>
           </div>
         </div>
@@ -87,6 +130,8 @@ function Analytics() {
                     if (item.label.includes('Food')) { icon = '🍴'; iconBg = '#fdeaca'; color = '#f5a623'; }
                     else if (item.label.includes('Transport')) { icon = '🚆'; iconBg = '#dff2ec'; color = '#19b69b'; }
                     else if (item.label.includes('Learn') || item.label.includes('Education')) { icon = '🎓'; iconBg = '#dbeafe'; color = '#1d4ed8'; }
+                    else if (item.label.includes('Util')) { icon = '💡'; iconBg = '#d1fae5'; color = '#047857'; }
+                    else if (item.label.includes('Entertain')) { icon = '🍿'; iconBg = '#fce7f3'; color = '#be185d'; }
                     
                     return (
                       <BreakdownItem 
@@ -122,18 +167,26 @@ function Analytics() {
           <button className="btn-white" style={{padding: '6px 12px', fontSize: '12px', border: '1px solid var(--border-color)', borderRadius: '16px', cursor: 'pointer', background: 'transparent', color: 'var(--text-main)'}}>Last 7 Days ˇ</button>
         </div>
         
-        <div style={{height: '140px', borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'flex-end', paddingBottom: '16px', position: 'relative'}}>
-           {/* Chart line placeholder using SVG */}
-           <svg width="100%" height="80" style={{position: 'absolute', bottom: 16, left: 0}} preserveAspectRatio="none" viewBox="0 0 100 100">
-             <path d="M0,80 Q20,60 40,90 T80,40 T100,60" fill="none" stroke="var(--card-dark)" strokeWidth="3" />
-             <circle cx="20" cy="70" r="4" fill="var(--card-dark)" />
-             <circle cx="40" cy="90" r="4" fill="var(--card-dark)" />
-             <circle cx="60" cy="65" r="4" fill="var(--card-dark)" />
-             <circle cx="80" cy="40" r="4" fill="var(--card-dark)" />
-           </svg>
+        <div style={{height: '140px', borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', paddingBottom: '16px', paddingTop: '16px'}}>
+           {weeklyData.map((data, i) => {
+             const heightPercent = data.amount > 0 ? (data.amount / maxWeeklyExpense) * 100 : 0;
+             const finalHeight = data.amount === 0 ? 4 : heightPercent;
+             return (
+               <div key={i} style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', width: '32px'}}>
+                 <div style={{
+                   width: '100%', 
+                   height: `${finalHeight}%`, 
+                   minHeight: '4px',
+                   backgroundColor: i === 6 ? 'var(--primary)' : 'var(--card-dark)', 
+                   borderRadius: '4px 4px 0 0',
+                   transition: 'height 0.3s ease'
+                 }} title={`GH¢${data.amount.toFixed(2)}`}></div>
+               </div>
+             )
+           })}
         </div>
-        <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '16px', fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)'}}>
-          <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+        <div style={{display: 'flex', justifyContent: 'space-between', padding: '0 8px', marginTop: '16px', fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)'}}>
+           {weeklyData.map((d, i) => <span key={i}>{d.dayName}</span>)}
         </div>
       </div>
       

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Plus, Building2, Smartphone, Banknote, Filter, ArrowRightLeft, ArrowRight, Utensils, Bus, Lightbulb } from 'lucide-react';
+import { Plus, Building2, Smartphone, Banknote, Filter, ArrowRightLeft, ArrowRight, Utensils, Bus, Lightbulb, Book, Film, QrCode } from 'lucide-react';
 import { useExpense } from '../context/ExpenseContext';
 import AddWalletModal from '../components/AddWalletModal';
+import QuickTransferModal from '../components/QuickTransferModal';
 import Button from '../components/Button';
 import './Dashboard.css';
 
 function Wallets() {
   const { state } = useExpense();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
   const getIconForType = (type) => {
     switch (type) {
@@ -28,6 +30,19 @@ function Wallets() {
   };
 
   const recentTransactions = state.transactions.slice(0, 10);
+
+  const getCategoryConfig = (category, type) => {
+    if (type === 'transfer') return { icon: <ArrowRightLeft size={18} color="#1d4ed8" />, bg: '#dbeafe' };
+    if (type === 'income') return { icon: <Plus size={18} color="#159a83" />, bg: '#dff2ec' };
+    switch(category) {
+      case 'Food & Drinks': return { icon: <Utensils size={18} color="#b87a1d" />, bg: '#fdeaca' };
+      case 'Transport': return { icon: <Bus size={18} color="#1d4ed8" />, bg: '#dbeafe' };
+      case 'Learning Materials': return { icon: <Book size={18} color="#6d28d9" />, bg: '#ede9fe' };
+      case 'Utilities': return { icon: <Lightbulb size={18} color="#047857" />, bg: '#d1fae5' };
+      case 'Entertainment': return { icon: <Film size={18} color="#be185d" />, bg: '#fce7f3' };
+      default: return { icon: <QrCode size={18} color="#4b5563" />, bg: '#f3f4f6' };
+    }
+  };
 
   return (
     <div className="page-wrapper">
@@ -84,14 +99,15 @@ function Wallets() {
               ) : (
                 recentTransactions.map(t => {
                   const wallet = state.wallets.find(w => w.id === t.walletId);
+                  const config = getCategoryConfig(t.category, t.type);
                   return (
                     <ActivityItem
                       key={t.id}
-                      icon={t.type === 'income' ? <ArrowRightLeft size={18} color="#159a83" /> : <Utensils size={18} color="#b87a1d" />}
-                      iconBg={t.type === 'income' ? '#dff2ec' : '#fdeaca'}
+                      icon={config.icon}
+                      iconBg={config.bg}
                       title={t.title}
                       subtitle={`${wallet ? wallet.name : 'Unknown Account'} • ${new Date(t.date).toLocaleDateString()}`}
-                      amount={`${t.type === 'income' ? '+' : '-'}GH¢${parseFloat(t.amount).toFixed(2)}`}
+                      amount={t.type === 'transfer' ? `GH¢${parseFloat(t.amount).toFixed(2)}` : `${t.type === 'income' ? '+' : '-'}GH¢${parseFloat(t.amount).toFixed(2)}`}
                       badge={t.category}
                       type={t.type}
                     />
@@ -114,18 +130,8 @@ function Wallets() {
           {state.wallets.length >= 2 && (
             <div className="quick-move-card">
               <h4 style={{ marginBottom: '16px' }}>Quick Move</h4>
-              <div className="move-direction">
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '4px' }}>FROM</span>
-                  <span>{state.wallets[0].name}</span>
-                </div>
-                <ArrowRightLeft size={20} className="move-arrow" />
-                <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'right' }}>
-                  <span style={{ fontSize: '10px', color: 'var(--text-muted)', marginBottom: '4px' }}>TO</span>
-                  <span>{state.wallets[1].name}</span>
-                </div>
-              </div>
-              <Button variant="primary">Transfer Now</Button>
+              <p style={{fontSize: '14px', color: 'var(--text-muted)', marginBottom: '16px'}}>Move money safely between your active accounts.</p>
+              <Button variant="primary" width="100%" onClick={() => setIsTransferModalOpen(true)}>Transfer Now</Button>
             </div>
           )}
 
@@ -133,6 +139,7 @@ function Wallets() {
       </div>
 
       <AddWalletModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <QuickTransferModal isOpen={isTransferModalOpen} onClose={() => setIsTransferModalOpen(false)} />
     </div>
   );
 }

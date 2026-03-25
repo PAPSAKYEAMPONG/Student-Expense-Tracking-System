@@ -89,6 +89,7 @@ function AddTransactionModal({ isOpen, onClose }) {
               <option value="Transport">Transport</option>
               <option value="Learning Materials">Learning Materials</option>
               <option value="Utilities">Utilities</option>
+              <option value="Entertainment">Entertainment</option>
               <option value="Income">Income</option>
             </select>
           </div>

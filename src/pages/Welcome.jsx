@@ -13,7 +13,7 @@ function Welcome() {
           <Wallet size={50} color="#ffffff" strokeWidth={2.5} />
         </div>
 
-        <h1 className="welcome-title">SETS</h1>
+        <img src="/Images/SETS%20LOGO.png" alt="SETS Logo" className="welcome-logo" />
         <h2 className="welcome-subtitle">Students Expense Tracking System</h2>
         <p className="welcome-description">Master Your Student Finances</p>
 

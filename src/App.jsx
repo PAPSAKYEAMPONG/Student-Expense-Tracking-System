@@ -11,13 +11,6 @@ import { ExpenseProvider } from './context/ExpenseContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './index.css';
 
-const Placeholder = ({ title }) => (
-  <div className="dashboard-page-wrapper">
-    <h1 className="dashboard-page-title">{title}</h1>
-    <p className="dashboard-page-subtitle">Coming soon...</p>
-  </div>
-);
-
 // Protected Route Enforcer
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useAuth();
@@ -52,7 +45,6 @@ function App() {
               <Route path="wallets" element={<Wallets />} />
               <Route path="analytics" element={<Analytics />} />
               <Route path="budget" element={<Budget />} />
-              <Route path="profile" element={<Placeholder title="Profile" />} />
             </Route>
             
             {/* Catch-all redirect */}
